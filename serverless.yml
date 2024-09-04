@@ -1,0 +1,62 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+# org: konecta1
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+# app: ses-final
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: ses-boot-camp
+
+provider:
+  stage: dev
+  name: aws
+  runtime: nodejs20.x
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-offline
+custom:
+  baseUrl: /api/${self:service} # prod/prod-ses-boot-camp
+  #baseUrl: /prod/${self:provider.stage}-${self:service} # prod/prod-ses-boot-camp
+functions:
+  sendEmail:
+    handler: dist/ses/sendEmail.handler
+    name: sendEmail
+    description: Send an email using SES
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:SendEmail
+        Resource: "*"
+    events:
+      - http:
+          path: ${self:custom.baseUrl}/sendEmail
+          method: post
+    package:
+      patterns:
+        - dist/ses/sendEmail.js
+  sendSmsServerless:
+    handler: dist/sns/sendSms.handler
+    name: sendSmsServerless
+    description: Send an SMS using SNS
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - sns:Publish
+        Resource: "*"
+    events:
+      - http:
+          path: ${self:custom.baseUrl}/sendSms
+          method: post
+    package:
+      patterns:
+        - dist/sns/sendSms.js
+resources:
+  Resources:
+    MyBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: bucket-correos-sestest
+package:
+  individually: true
+  patterns:
+    - "!node_modules/**"
+    - "!*/**"
+    - "!**"

@@ -1,7 +1,7 @@
 const esbuild = require("esbuild");
 const { findFiles } = require("./filterBaseDirectories");
 // INSERT: pattern by directory to find entry points into baseDirectories array
-const baseDirectories = ["src/ses", "src/sns"];
+const baseDirectories = ["src/ses", "src/sns", "src/gmail"];
 
 const entryPoints = findFiles(baseDirectories, ".js");
 

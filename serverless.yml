@@ -48,6 +48,39 @@ functions:
     package:
       patterns:
         - dist/sns/sendSms.js
+  getAuthUrlGmail:
+    handler: dist/gmail/authGmail.handler
+    name: getAuthUrlGmail
+    description: Get the URL to authenticate with Gmail
+    events:
+      - http:
+          path: ${self:custom.baseUrl}/authGmail
+          method: get
+    package:
+      patterns:
+        - dist/gmail/authGmail.js
+  getRedirectUrlGmail:
+    handler: dist/gmail/authRedirectGmail.handler
+    name: getRedirectUrlGmail
+    description: Get the URL to authenticate with Gmail
+    events:
+      - http:
+          path: ${self:custom.baseUrl}/authGmail/redirect
+          method: get
+    package:
+      patterns:
+        - dist/gmail/authRedirectGmail.js
+  sendEmailGmail:
+    handler: dist/gmail/sendEmail.handler
+    name: sendEmailGmail
+    description: Send an email using Gmail
+    events:
+      - http:
+          path: ${self:custom.baseUrl}/sendEmailGmail
+          method: post
+    package:
+      patterns:
+        - dist/gmail/sendEmail.js
 resources:
   Resources:
     MyBucket:
